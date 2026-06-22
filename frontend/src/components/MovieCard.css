@@ -1,0 +1,27 @@
+/* Collection Section */
+.movie-info select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+}
+
+.collection-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #6f42c1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.collection-btn:hover {
+  background-color: #5a32a3;
+}

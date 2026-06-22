@@ -1,0 +1,49 @@
+.collection-details {
+  padding: 30px;
+}
+
+.collection-details h2 {
+  margin-bottom: 10px;
+}
+
+.collection-details p {
+  margin-bottom: 30px;
+}
+
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  background: #1f1f1f;
+  color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+.movie-card h4 {
+  padding: 12px;
+  font-size: 16px;
+}
+
+.remove-btn {
+  width: 100%;
+  border: none;
+  padding: 12px;
+  background: #e53935;
+  color: white;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background: #c62828;
+}

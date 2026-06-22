@@ -1,0 +1,174 @@
+/* =========================
+   Page Container
+========================= */
+
+.collections-page {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  color: white;
+}
+
+.collections-page h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   Create / Edit Form
+========================= */
+
+.collection-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.collection-form input,
+.collection-form textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #334155;
+  border-radius: 12px;
+  font-size: 15px;
+  background: #0f172a;
+  color: #f1f5f9;
+  transition: border-color 0.2s;
+}
+
+.collection-form input::placeholder,
+.collection-form textarea::placeholder {
+  color: #64748b;
+}
+
+.collection-form input:focus,
+.collection-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.collection-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.collection-form button {
+  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.collection-form button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   Collection Grid
+========================= */
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* =========================
+   Collection Card
+========================= */
+
+.collection-card {
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.collection-card:hover {
+  transform: translateY(-4px);
+}
+
+.collection-card h3 {
+  color: #f8fafc;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.collection-card p {
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.movie-count {
+  color: #38bdf8;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+/* =========================
+   Card Buttons — all same size
+========================= */
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Shared base for all three action buttons */
+.view-btn,
+.edit-btn,
+.delete-btn {
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.view-btn:hover,
+.edit-btn:hover,
+.delete-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.view-btn {
+  background: #10b981;
+  color: white;
+}
+
+.edit-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+}

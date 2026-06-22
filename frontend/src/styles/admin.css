@@ -1,0 +1,144 @@
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: linear-gradient(
+    180deg,
+    #0f172a 0%,
+    #111827 100%
+  );
+}
+
+/* Dashboard Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+  border-color: #6366f1;
+  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);
+}
+
+.stat-card h2 {
+  font-size: 40px;
+  margin: 0;
+  color: #ffffff;
+}
+
+.stat-card p {
+  margin-top: 12px;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+/* Tables */
+.table-container {
+  margin-top: 30px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #6366f1;
+  color: white;
+  padding: 16px;
+  font-weight: 600;
+}
+
+td {
+  padding: 16px;
+  text-align: center;
+}
+
+tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+tr:hover {
+  background: rgba(99,102,241,0.12);
+}
+
+/* Buttons */
+button {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #4f46e5;
+  transform: translateY(-2px);
+}
+
+/* Dashboard Hero Section */
+.hero-banner {
+  background: linear-gradient(
+    135deg,
+    #6366f1,
+    #8b5cf6
+  );
+  border-radius: 24px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 15px 35px rgba(99,102,241,0.25);
+}
+
+.hero-banner h1 {
+  margin: 0;
+  font-size: 36px;
+}
+
+.hero-banner p {
+  margin-top: 12px;
+  color: #e2e8f0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111827;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6366f1;
+  border-radius: 20px;
+}

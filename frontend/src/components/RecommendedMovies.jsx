@@ -1,0 +1,150 @@
+import React, {
+  useEffect,
+  useState
+} from "react";
+
+import axios from "axios";
+
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import SearchBar from "./SearchBar";
+import MovieCard from "./MovieCard";
+
+import "./RecommendedMovies.css";
+
+function RecommendedMovies() {
+
+  const [movies, setMovies] = useState([]);
+
+  const [search, setSearch] = useState("");
+
+  const [loading, setLoading] =
+    useState(true);
+
+  // fetch recommendation API
+  const fetchRecommendations = async () => {
+
+    try {
+
+      const token =
+        localStorage.getItem("token");
+
+      const response = await axios.get(
+        "http://127.0.0.1:8000/recommendations",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMovies(
+        response.data.recommended_movies
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, []);
+
+  return (
+    <div className="layout">
+
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main */}
+      <div className="main-section">
+
+        {/* Navbar */}
+        <Navbar />
+
+        {/* Search */}
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
+        />
+
+        {/* Header */}
+        <div className="header">
+
+          <div>
+
+            <h1>
+              Recommended For You
+            </h1>
+
+            <p>
+              Movies recommended based on
+              your search history and
+              favorites.
+            </p>
+
+          </div>
+
+          <button
+            className="refresh-btn"
+            onClick={
+              fetchRecommendations
+            }
+          >
+            Refresh
+          </button>
+
+        </div>
+
+        {/* Loading */}
+        {loading ? (
+          <p>Loading...</p>
+        ) : movies.length === 0 ? (
+
+          <div className="empty-state">
+
+            <h2>
+              No Recommendations Yet
+            </h2>
+
+            <p>
+              Start searching and adding
+              favorites to get personalized
+              recommendations.
+            </p>
+
+          </div>
+
+        ) : (
+
+          <div className="movie-grid">
+
+            {movies.map((movie, index) => (
+
+              <MovieCard
+                key={index}
+                movie={movie}
+              />
+
+            ))}
+
+          </div>
+
+        )}
+
+      </div>
+
+    </div>
+  );
+}
+
+export default RecommendedMovies;
