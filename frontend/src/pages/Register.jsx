@@ -25,7 +25,7 @@ function Register() {
       formData.append("password", password);
 
       await axios.post(
-        "http://127.0.0.1:8000/auth/register",
+        "https://collect-dd4h.onrender.com/auth/register",
         formData
       );
 

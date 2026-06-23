@@ -14,7 +14,7 @@ function Watchlist() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/watchlist/",
+        "https://collect-dd4h.onrender.com/watchlist/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,7 +33,7 @@ function Watchlist() {
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `http://127.0.0.1:8000/watchlist/${id}`,
+        `https://collect-dd4h.onrender.com/watchlist/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

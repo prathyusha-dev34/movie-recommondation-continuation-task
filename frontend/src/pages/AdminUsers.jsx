@@ -13,7 +13,7 @@ const AdminUsers = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "http://127.0.0.1:8000/admin/users",
+        "https://collect-dd4h.onrender.com/admin/users",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ const AdminUsers = () => {
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `http://127.0.0.1:8000/admin/users/${id}`,
+        `https://collect-dd4h.onrender.com/admin/users/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -24,7 +24,7 @@ function History() {
         localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/history",
+        "https://collect-dd4h.onrender.com/history",
         {
           headers: {
             Authorization:

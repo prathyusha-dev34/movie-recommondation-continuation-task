@@ -25,7 +25,7 @@ function Profile() {
 
       const response =
         await axios.get(
-          "http://127.0.0.1:8000/profile/",
+          "https://collect-dd4h.onrender.com/profile/",
           {
             headers: {
               Authorization:
@@ -49,7 +49,7 @@ function Profile() {
 
       const response =
         await axios.put(
-          "http://127.0.0.1:8000/profile/",
+          "https://collect-dd4h.onrender.com/profile/",
           {
             email
           },
@@ -79,7 +79,7 @@ function Profile() {
 
       const response =
         await axios.put(
-          "http://127.0.0.1:8000/profile/change-password",
+          "https://collect-dd4h.onrender.com/profile/change-password",
           {
             old_password: oldPassword,
             new_password: newPassword

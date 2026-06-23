@@ -13,7 +13,7 @@ function Favorites() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/favorites/",
+        "https://collect-dd4h.onrender.com/favorites/",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ function Favorites() {
       const token = localStorage.getItem("token");
 
       await axios.delete(
-        `http://127.0.0.1:8000/favorites/${id}`,
+        `https://collect-dd4h.onrender.com/favorites/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -40,7 +40,7 @@ function MovieCard({ movie }) {
       };
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/favorites/",
+        "https://collect-dd4h.onrender.com/favorites/",
         favoriteData,
         {
           headers: {
@@ -75,7 +75,7 @@ function MovieCard({ movie }) {
       };
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/watchlist/",
+        "https://collect-dd4h.onrender.com/watchlist/",
         watchlistData,
         {
           headers: {
@@ -110,7 +110,7 @@ function MovieCard({ movie }) {
       };
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/reviews/",
+        "https://collect-dd4h.onrender.com/reviews/",
         reviewData,
         {
           headers: {
@@ -134,7 +134,7 @@ function MovieCard({ movie }) {
         movie.imdbID || movie.movie_id || movie.title;
 
       const response = await axios.get(
-        `http://127.0.0.1:8000/reviews/${movieId}`
+        `https://collect-dd4h.onrender.com/reviews/${movieId}`
       );
 
       if (response.data.reviews.length === 0) {
