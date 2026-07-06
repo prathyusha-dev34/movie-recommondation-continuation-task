@@ -1,0 +1,45 @@
+.genre-section{
+margin-top:30px;
+}
+
+.genre-input{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+.genre-input input{
+flex:1;
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.genre-input button{
+padding:10px 20px;
+cursor:pointer;
+}
+
+.genre-list{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.genre-chip{
+display:flex;
+align-items:center;
+gap:8px;
+padding:8px 14px;
+background:#2563eb;
+color:white;
+border-radius:20px;
+}
+
+.genre-chip button{
+border:none;
+background:transparent;
+color:white;
+cursor:pointer;
+font-size:16px;
+}

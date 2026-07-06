@@ -23,6 +23,7 @@ from app.routes import (
     watchlist,
     reviews,
     profile,
+    preferences,
     collections,
     notification,
     watched,
@@ -68,6 +69,7 @@ app.include_router(movies.router)
 app.include_router(watchlist.router)
 app.include_router(reviews.router)
 app.include_router(profile.router)
+app.include_router(preferences.router)
 app.include_router(collections.router)
 app.include_router(notification.router)
 app.include_router(watched.router)

@@ -1,117 +1,152 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
+import { useToast } from "../context/ToastContext";
+
+import StatsCards from "../components/StatsCards";
+import GenrePreferences from "../components/GenrePreferences";
+import ChangePassword from "../components/ChangePassword";
+
 import "./Profile.css";
 
 function Profile() {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
-  const [email, setEmail] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [profileError, setProfileError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [profile, setProfile] = useState({
+    username: "",
+    email: "",
+  });
+
+  const [stats, setStats] = useState({
+    watched_count: 0,
+    favorites_count: 0,
+    watchlist_count: 0,
+    reviews_count: 0,
+  });
+
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     fetchProfile();
+    fetchStats();
   }, []);
 
   const fetchProfile = async () => {
     try {
-      // ✅ Use shared API instance (token attached automatically)
-      const response = await API.get("/profile/");
-      setEmail(response.data.email);
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
+      const res = await API.get("/profile/");
+      setProfile(res.data);
+    } catch (err) {
+      showToast("Failed to load profile", "error");
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const res = await API.get("/profile/stats");
+      setStats(res.data);
+    } catch (err) {
+      showToast("Failed to load stats", "error");
     }
   };
 
   const updateProfile = async () => {
-    setProfileError("");
     try {
-      const response = await API.put("/profile/", { email });
-      alert(response.data.message || "Profile updated");
-    } catch (error) {
-      const detail = error.response?.data?.detail || "Update failed";
-      setProfileError(detail);
-    }
-  };
+      const res = await API.put("/profile/", profile);
 
-  const changePassword = async () => {
-    setPasswordError("");
-    try {
-      const response = await API.put("/profile/change-password", {
-        old_password: oldPassword,
-        new_password: newPassword,
-      });
-      alert(response.data.message || "Password changed");
-      setOldPassword("");
-      setNewPassword("");
-    } catch (error) {
-      const detail = error.response?.data?.detail || "Password change failed";
-      setPasswordError(detail);
+      showToast(
+        res.data.message || "Profile updated successfully",
+        "success"
+      );
+
+      setEditMode(false);
+      fetchProfile();
+    } catch (err) {
+      showToast(
+        err.response?.data?.detail || "Profile update failed",
+        "error"
+      );
     }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/login");
+
+    showToast("Logged out successfully", "success");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 500);
   };
 
   return (
     <div className="profile-page">
+
       <h1>My Profile</h1>
 
       <div className="profile-card">
-        <h3>Email</h3>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+
+        <img
+          src="https://i.pravatar.cc/150"
+          alt="avatar"
+          width="120"
+          style={{
+            borderRadius: "50%",
+            marginBottom: "20px",
+          }}
         />
-        {profileError && (
-          <p style={{ color: "#e03333", fontSize: "13px" }}>{profileError}</p>
+
+        <input
+          disabled={!editMode}
+          value={profile.username}
+          onChange={(e) =>
+            setProfile({
+              ...profile,
+              username: e.target.value,
+            })
+          }
+        />
+
+        <input
+          disabled={!editMode}
+          value={profile.email}
+          onChange={(e) =>
+            setProfile({
+              ...profile,
+              email: e.target.value,
+            })
+          }
+        />
+
+        {editMode ? (
+          <button onClick={updateProfile}>
+            Save Profile
+          </button>
+        ) : (
+          <button onClick={() => setEditMode(true)}>
+            Edit Profile
+          </button>
         )}
-        <button onClick={updateProfile}>Update Profile</button>
       </div>
 
-      <div className="profile-card">
-        <h3>Change Password</h3>
-        <input
-          type="password"
-          placeholder="Current Password"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="New Password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        {passwordError && (
-          <p style={{ color: "#e03333", fontSize: "13px" }}>{passwordError}</p>
-        )}
-        <button onClick={changePassword}>Change Password</button>
-      </div>
+      <StatsCards stats={stats} />
+
+      <GenrePreferences showToast={showToast} />
+
+      <ChangePassword showToast={showToast} />
 
       <div className="profile-card">
         <h3>Account</h3>
+
         <button
+          className="logout-btn"
           onClick={logout}
-          style={{
-            backgroundColor: "red",
-            color: "white",
-            padding: "10px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
         >
           Logout
         </button>
       </div>
+
     </div>
   );
 }
