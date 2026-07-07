@@ -1,11 +1,16 @@
 import axios from "axios";
 
-// Base API URL from .env
+// Create Axios instance
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
+  baseURL:
+    import.meta.env.VITE_API_BASE_URL ||
+    "https://movie-recommondation-continuation-task.onrender.com",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-// Automatically attach JWT token
+// Attach JWT token automatically
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
