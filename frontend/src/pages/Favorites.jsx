@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
+import { useToast } from "../context/ToastContext";
 
 function Favorites() {
   const [favorites, setFavorites] = useState([]);
+  const { showToast } = useToast();
 
   useEffect(() => {
     fetchFavorites();
@@ -10,21 +12,25 @@ function Favorites() {
 
   const fetchFavorites = async () => {
     try {
-      // ✅ Use shared API instance (token attached automatically)
       const response = await API.get("/favorites/");
       setFavorites(response.data.favorites || []);
     } catch (error) {
       console.error("Failed to fetch favorites:", error);
+      showToast("Failed to load favorites", "error");
     }
   };
 
   const removeFavorite = async (id) => {
     try {
       await API.delete(`/favorites/${id}`);
-      setFavorites(favorites.filter((movie) => movie.id !== id));
+
+      // Refresh favorites list
+      fetchFavorites();
+
+      showToast("Movie removed from favorites", "success");
     } catch (error) {
       console.error("Failed to remove favorite:", error);
-      alert("Failed to remove movie");
+      showToast("Failed to remove movie", "error");
     }
   };
 
@@ -50,6 +56,7 @@ function Favorites() {
               <div className="movie-info">
                 <h3>{movie.movie_title}</h3>
                 <p>{movie.genre || "Movie"}</p>
+
                 <button
                   className="remove-btn"
                   onClick={() => removeFavorite(movie.id)}

@@ -33,7 +33,7 @@ function Home() {
         setSearchError("No movies found for that search.");
       }
 
-      // 2. ✅ Save search to backend so recommendations stay accurate
+      // 2. Save search to backend so recommendations stay accurate
       try {
         await API.get("/movies/search", {
           params: { query },
@@ -69,54 +69,56 @@ function Home() {
     <>
       <SearchBar onSearch={handleSearch} />
 
-        <h1 className="section-title">Search Results</h1>
+      <h1 className="section-title">Search Results</h1>
 
-        {searchError && <p style={{ color: "#e03333" }}>{searchError}</p>}
+      {searchError && (
+        <p style={{ color: "#e03333" }}>{searchError}</p>
+      )}
 
-        <div className="movies-grid">
-          {movies.length > 0 ? (
-            movies.map((movie) => (
-              <div key={movie.imdbID}>
-                <MovieCard
-                  movie={{
-                    imdbID: movie.imdbID,
-                    title: movie.Title,
-                    genre: movie.Type,
-                    poster: movie.Poster,
-                    reason: movie.Year,
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p>No search results</p>
-          )}
-        </div>
+      <div className="movies-grid">
+        {movies.length > 0 ? (
+          movies.map((movie) => (
+            <div key={movie.imdbID}>
+              <MovieCard
+                movie={{
+                  imdbID: movie.imdbID,
+                  title: movie.Title,
+                  genre: movie.Type,
+                  poster: movie.Poster,
+                  reason: movie.Year,
+                }}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No search results</p>
+        )}
+      </div>
 
-        <h1 className="section-title">Recommended Movies</h1>
+      <h1 className="section-title">Recommended Movies</h1>
 
-        <div className="movies-grid">
-          {recommendedMovies.length > 0 ? (
-            recommendedMovies.map((movie, index) => (
-              <div key={index}>
-                <MovieCard
-                  movie={{
-                    imdbID: movie.imdbID,
-                    title: movie.title,
-                    genre: movie.genre,
-                    poster:
-                      movie.poster ||
-                      "https://via.placeholder.com/300x450?text=No+Image",
-                    reason: movie.reason,
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <p>No recommendations yet</p>
-          )}
-        </div>
-      </>
+      <div className="movies-grid">
+        {recommendedMovies.length > 0 ? (
+          recommendedMovies.map((movie, index) => (
+            <div key={index}>
+              <MovieCard
+                movie={{
+                  imdbID: movie.imdbID,
+                  title: movie.title,
+                  genre: movie.genre,
+                  poster:
+                    movie.poster ||
+                    "https://via.placeholder.com/300x450?text=No+Image",
+                  reason: movie.reason,
+                }}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No recommendations yet</p>
+        )}
+      </div>
+    </>
   );
 }
 

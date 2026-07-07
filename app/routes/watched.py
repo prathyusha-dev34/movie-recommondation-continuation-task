@@ -8,7 +8,6 @@ from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
 from app.schemas.viewed_movie import ViewedMovieCreate
 
-# Notification Service
 from app.services.notification_service import send_notification
 
 router = APIRouter(
@@ -26,7 +25,7 @@ def mark_as_watched(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # Prevent duplicate watched movie records for the same user
+
     existing = (
         db.query(ViewedMovie)
         .filter(
@@ -37,6 +36,7 @@ def mark_as_watched(
     )
 
     if not existing:
+
         new_watched = ViewedMovie(
             user_id=current_user.id,
             movie_id=movie_data.movie_id,
@@ -45,22 +45,23 @@ def mark_as_watched(
             poster=movie_data.poster,
             imdb_rating=movie_data.imdb_rating
         )
+
         db.add(new_watched)
         db.commit()
         db.refresh(new_watched)
-        
-        # Create notification for watched history
+
         send_notification(
             db=db,
             user_id=current_user.id,
             message=f'"{movie_data.movie_title}" was added to watched history.',
             notification_type="watched"
         )
+
         result = new_watched
+
     else:
         result = existing
 
-    # If movie is marked as watched and already exists in the user's watchlist, remove it automatically
     watchlist_item = (
         db.query(Watchlist)
         .filter(
@@ -69,12 +70,14 @@ def mark_as_watched(
         )
         .first()
     )
+
     if watchlist_item:
+
         movie_title = watchlist_item.movie_title
+
         db.delete(watchlist_item)
         db.commit()
-        
-        # Create notification for watchlist removal
+
         send_notification(
             db=db,
             user_id=current_user.id,
@@ -106,6 +109,7 @@ def get_watched_history(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+
     history = (
         db.query(ViewedMovie)
         .filter(
@@ -136,7 +140,7 @@ def get_watched_history(
 
 
 # =================================
-# DELETE WATCHED MOVIE (BY MOVIE_ID STRING)
+# DELETE WATCHED MOVIE
 # =================================
 @router.delete("/{movieId}")
 def remove_watched(
@@ -144,6 +148,7 @@ def remove_watched(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+
     movie = (
         db.query(ViewedMovie)
         .filter(
@@ -160,10 +165,10 @@ def remove_watched(
         )
 
     movie_title = movie.movie_title
+
     db.delete(movie)
     db.commit()
 
-    # Create notification for removal
     send_notification(
         db=db,
         user_id=current_user.id,
@@ -178,7 +183,7 @@ def remove_watched(
 
 
 # =================================
-# GET WATCHED STATUS (BY MOVIE_ID STRING)
+# GET WATCHED STATUS
 # =================================
 @router.get("/status/{movieId}")
 def get_watched_status(
@@ -186,6 +191,7 @@ def get_watched_status(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+
     watched_item = (
         db.query(ViewedMovie)
         .filter(
@@ -208,5 +214,6 @@ def get_watched_status(
         "success": True,
         "watched": watched_item is not None,
         "watchlist": watchlist_item is not None,
-        "watched_date": watched_item.viewed_at.isoformat() if (watched_item and watched_item.viewed_at) else None
+        "watched_date": watched_item.viewed_at.isoformat()
+        if watched_item and watched_item.viewed_at else None
     }

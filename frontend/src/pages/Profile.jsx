@@ -36,7 +36,7 @@ function Profile() {
     try {
       const res = await API.get("/profile/");
       setProfile(res.data);
-    } catch (err) {
+    } catch {
       showToast("Failed to load profile", "error");
     }
   };
@@ -45,7 +45,7 @@ function Profile() {
     try {
       const res = await API.get("/profile/stats");
       setStats(res.data);
-    } catch (err) {
+    } catch {
       showToast("Failed to load stats", "error");
     }
   };
@@ -61,6 +61,7 @@ function Profile() {
 
       setEditMode(false);
       fetchProfile();
+
     } catch (err) {
       showToast(
         err.response?.data?.detail || "Profile update failed",
@@ -75,76 +76,83 @@ function Profile() {
 
     showToast("Logged out successfully", "success");
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 500);
+    setTimeout(() => navigate("/login"), 500);
   };
 
   return (
     <div className="profile-page">
 
-      <h1>My Profile</h1>
+      <h1 className="profile-title">
+        My Profile
+      </h1>
 
-      <div className="profile-card">
+      <div className="profile-header">
 
-        <img
-          src="https://i.pravatar.cc/150"
-          alt="avatar"
-          width="120"
-          style={{
-            borderRadius: "50%",
-            marginBottom: "20px",
-          }}
-        />
+        <div className="profile-card profile-left">
 
-        <input
-          disabled={!editMode}
-          value={profile.username}
-          onChange={(e) =>
-            setProfile({
-              ...profile,
-              username: e.target.value,
-            })
-          }
-        />
+          <img
+            className="profile-avatar"
+            src="https://i.pravatar.cc/200"
+            alt="avatar"
+          />
 
-        <input
-          disabled={!editMode}
-          value={profile.email}
-          onChange={(e) =>
-            setProfile({
-              ...profile,
-              email: e.target.value,
-            })
-          }
-        />
+          <input
+            disabled={!editMode}
+            value={profile.username}
+            onChange={(e) =>
+              setProfile({
+                ...profile,
+                username: e.target.value,
+              })
+            }
+          />
 
-        {editMode ? (
-          <button onClick={updateProfile}>
-            Save Profile
-          </button>
-        ) : (
-          <button onClick={() => setEditMode(true)}>
-            Edit Profile
-          </button>
-        )}
-      </div>
+          <input
+            disabled={!editMode}
+            value={profile.email}
+            onChange={(e) =>
+              setProfile({
+                ...profile,
+                email: e.target.value,
+              })
+            }
+          />
 
-      <StatsCards stats={stats} />
+          {editMode ? (
+            <button onClick={updateProfile}>
+              Save Profile
+            </button>
+          ) : (
+            <button onClick={() => setEditMode(true)}>
+              Edit Profile
+            </button>
+          )}
 
-      <GenrePreferences showToast={showToast} />
+        </div>
 
-      <ChangePassword showToast={showToast} />
+        <div className="profile-right">
 
-      <div className="profile-card">
-        <h3>Account</h3>
+          <StatsCards stats={stats} />
 
-        <button
-          className="logout-btn"
-          onClick={logout}
-        >
-          Logout
-        </button>
+          <GenrePreferences showToast={showToast} />
+
+          <ChangePassword showToast={showToast} />
+
+          <div className="profile-card">
+
+            <h3>Account</h3>
+
+            <button
+              className="logout-btn"
+              onClick={logout}
+            >
+              Logout
+            </button>
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
