@@ -1,0 +1,15 @@
+.pie-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+.pie-card h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.recharts-wrapper {
+  margin: auto;
+}

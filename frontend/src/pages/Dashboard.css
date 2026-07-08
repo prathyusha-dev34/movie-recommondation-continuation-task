@@ -1,0 +1,134 @@
+/* ==========================
+   Dashboard Page
+========================== */
+
+.dashboard-page {
+  padding: 35px;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* ==========================
+   Header
+========================== */
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.dashboard-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 10px;
+}
+
+.dashboard-subtitle {
+  font-size: 18px;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* ==========================
+   Section Titles
+========================== */
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 34px;
+  font-weight: 700;
+
+  color: #1f2937 !important;
+  margin: 45px 0 20px;
+
+  opacity: 1 !important;
+  visibility: visible;
+  text-shadow: none;
+}
+
+/* ==========================
+   Charts
+========================== */
+
+.dashboard-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  margin-bottom: 45px;
+}
+
+.genre-card,
+.monthly-card,
+.pie-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.genre-card:hover,
+.monthly-card:hover,
+.pie-card:hover {
+  transform: translateY(-5px);
+}
+
+/* ==========================
+   Recent Activity
+========================== */
+
+.recent-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================
+   Loading
+========================== */
+
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* ==========================
+   Responsive
+========================== */
+
+@media (max-width: 1200px) {
+  .dashboard-chart-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 20px;
+  }
+
+  .dashboard-title {
+    font-size: 36px;
+  }
+
+  .dashboard-subtitle {
+    font-size: 16px;
+  }
+
+  .dashboard-chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    font-size: 28px;
+  }
+}
