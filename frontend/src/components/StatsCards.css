@@ -1,41 +1,109 @@
-.stats-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:25px;
-    margin:30px 0;
+/* ==========================
+   Stats Grid
+========================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 35px 0 50px;
 }
 
-.stats-card{
-    background:linear-gradient(135deg,#1f2937,#293548);
-    color:white;
-    border-radius:18px;
-    padding:30px;
-    text-align:center;
-    transition:.3s;
-    box-shadow:0 8px 20px rgba(0,0,0,.25);
+/* Center last two cards */
+
+.stats-grid .stats-card:nth-child(5) {
+  grid-column: 2;
 }
 
-.stats-card:hover{
-    transform:translateY(-6px);
+.stats-grid .stats-card:nth-child(6) {
+  grid-column: 3;
 }
 
-.stats-card svg{
-    font-size:40px;
-    color:#38bdf8;
-    margin-bottom:15px;
+/* ==========================
+   Card
+========================== */
+
+.stats-card {
+  background: #2f3b52;
+  border-radius: 18px;
+  min-height: 220px;
+  padding: 30px 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  transition: all .3s ease;
 }
 
-.stats-card h2{
-    font-size:42px;
-    margin:10px 0;
+.stats-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0,0,0,.22);
 }
 
-.stats-card p{
-    color:#d1d5db;
+/* ==========================
+   Icon
+========================== */
+
+.stats-icon {
+  font-size: 50px;
+  margin-bottom: 18px;
 }
 
-@media(max-width:768px){
-.stats-grid{
-grid-template-columns:1fr;
+/* ==========================
+   Number
+========================== */
+
+.stats-card h2 {
+  margin: 10px 0;
+  font-size: 52px;
+  font-weight: 700;
+  color: #fff;
 }
+
+/* ==========================
+   Label
+========================== */
+
+.stats-card p {
+  margin: 0;
+  font-size: 22px;
+  color: #e5e7eb;
+}
+
+/* ==========================
+   Responsive
+========================== */
+
+@media (max-width: 1200px) {
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stats-grid .stats-card:nth-child(5),
+  .stats-grid .stats-card:nth-child(6) {
+    grid-column: auto;
+  }
+
+}
+
+@media (max-width: 900px) {
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
 }

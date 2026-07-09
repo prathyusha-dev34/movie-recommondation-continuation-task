@@ -209,7 +209,6 @@ function App() {
 
           {/* Redirect Unknown Routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
-
         </Routes>
 
         <CompareBar />
