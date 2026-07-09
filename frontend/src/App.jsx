@@ -8,6 +8,7 @@ import {
 
 // Pages
 import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Favorites from "./pages/Favorites";
@@ -51,6 +52,18 @@ function App() {
               <ProtectedRoute>
                 <Layout>
                   <Home />
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Dashboard />
                 </Layout>
               </ProtectedRoute>
             }
@@ -196,9 +209,9 @@ function App() {
 
           {/* Redirect Unknown Routes */}
           <Route path="*" element={<Navigate to="/" replace />} />
+
         </Routes>
 
-        {/* Global floating comparison bar */}
         <CompareBar />
       </BrowserRouter>
     </CompareProvider>
