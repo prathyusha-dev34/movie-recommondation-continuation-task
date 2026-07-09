@@ -1,0 +1,93 @@
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.recent-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.recent-section h3 {
+  margin-bottom: 20px;
+  color: #111827;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.recent-item img {
+  width: 60px;
+  height: 85px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.recent-item h4 {
+  margin: 0;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.recent-item small {
+  color: #6b7280;
+}
+
+/* Review Cards */
+
+.review-item {
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.review-item h4 {
+  margin: 0 0 8px;
+  color: #111827;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.review-item p {
+  margin: 0;
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* Tablet */
+
+@media (max-width: 992px) {
+  .recent-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .recent-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recent-item {
+    flex-direction: row;
+  }
+
+  .recent-item img {
+    width: 55px;
+    height: 80px;
+  }
+}
