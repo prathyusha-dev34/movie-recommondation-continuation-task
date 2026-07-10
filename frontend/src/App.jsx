@@ -15,14 +15,16 @@ import Favorites from "./pages/Favorites";
 import History from "./pages/History";
 import Profile from "./pages/Profile";
 import Watchlist from "./pages/Watchlist";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminUsers from "./pages/AdminUsers";
-import AdminReviews from "./pages/AdminReviews";
 import Collections from "./pages/Collections";
 import CollectionDetails from "./pages/CollectionDetails";
+import PublicCollections from "./pages/PublicCollections";
 import Notifications from "./pages/Notifications";
 import ComparePage from "./pages/ComparePage";
 import WatchedHistory from "./pages/WatchedHistory";
+import { ToastProvider } from "./context/ToastContext";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminUsers from "./pages/AdminUsers";
+import AdminReviews from "./pages/AdminReviews";
 
 // Route Guards
 import ProtectedRoute from "./router";
@@ -37,183 +39,194 @@ import CompareBar from "./components/CompareBar";
 
 function App() {
   return (
-    <CompareProvider>
-      <BrowserRouter>
-        <Routes>
+    <ToastProvider>
+      <CompareProvider>
+        <BrowserRouter>
+          <Routes>
 
-          {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+            {/* Public */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* Home */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Home />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Home */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Home />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Dashboard */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Dashboard />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Dashboard */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Compare */}
-          <Route
-            path="/compare"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <ComparePage />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Compare */}
+            <Route
+              path="/compare"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <ComparePage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Favorites */}
-          <Route
-            path="/favorites"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Favorites />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Favorites */}
+            <Route
+              path="/favorites"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Favorites />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* History */}
-          <Route
-            path="/history"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <History />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* History */}
+            <Route
+              path="/history"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <History />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Watchlist */}
-          <Route
-            path="/watchlist"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Watchlist />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Watchlist */}
+            <Route
+              path="/watchlist"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Watchlist />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Watched History */}
-          <Route
-            path="/watched"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <WatchedHistory />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Watched */}
+            <Route
+              path="/watched"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <WatchedHistory />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Profile */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Profile />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Profile */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Profile />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Collections */}
-          <Route
-            path="/collections"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Collections />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Collections */}
+            <Route
+              path="/collections"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Collections />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Collection Details */}
-          <Route
-            path="/collections/:id"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <CollectionDetails />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Public Collections */}
+            <Route
+              path="/collections/public"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PublicCollections />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Notifications */}
-          <Route
-            path="/notifications"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Notifications />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+            {/* Collection Details */}
+            <Route
+              path="/collections/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CollectionDetails />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Admin Dashboard */}
-          <Route
-            path="/admin"
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            }
-          />
+            {/* Notifications */}
+            <Route
+              path="/notifications"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Notifications />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Admin Users */}
-          <Route
-            path="/admin/users"
-            element={
-              <AdminRoute>
-                <AdminUsers />
-              </AdminRoute>
-            }
-          />
+            {/* Admin */}
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
 
-          {/* Admin Reviews */}
-          <Route
-            path="/admin/reviews"
-            element={
-              <AdminRoute>
-                <AdminReviews />
-              </AdminRoute>
-            }
-          />
+            <Route
+              path="/admin/users"
+              element={
+                <AdminRoute>
+                  <AdminUsers />
+                </AdminRoute>
+              }
+            />
 
-          {/* Redirect Unknown Routes */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route
+              path="/admin/reviews"
+              element={
+                <AdminRoute>
+                  <AdminReviews />
+                </AdminRoute>
+              }
+            />
 
-        <CompareBar />
-      </BrowserRouter>
-    </CompareProvider>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+
+          <CompareBar />
+        </BrowserRouter>
+      </CompareProvider>
+    </ToastProvider>
   );
 }
 
