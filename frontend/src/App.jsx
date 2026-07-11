@@ -23,7 +23,7 @@ import CollectionDetails from "./pages/CollectionDetails";
 import Notifications from "./pages/Notifications";
 import ComparePage from "./pages/ComparePage";
 import WatchedHistory from "./pages/WatchedHistory";
-
+import PublicCollections from "./pages/PublicCollections";
 // Route Guards
 import ProtectedRoute from "./router";
 import AdminRoute from "./components/AdminRoute";
@@ -142,29 +142,40 @@ function App() {
           />
 
           {/* Collections */}
-          <Route
-            path="/collections"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <Collections />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+<Route
+  path="/collections"
+  element={
+    <ProtectedRoute>
+      <Layout>
+        <Collections />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
 
-          {/* Collection Details */}
-          <Route
-            path="/collections/:id"
-            element={
-              <ProtectedRoute>
-                <Layout>
-                  <CollectionDetails />
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
+{/* Public Collections */}
+<Route
+  path="/collections/public"
+  element={
+    <ProtectedRoute>
+      <Layout>
+        <PublicCollections />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
 
+{/* Collection Details */}
+<Route
+  path="/collections/:id"
+  element={
+    <ProtectedRoute>
+      <Layout>
+        <CollectionDetails />
+      </Layout>
+    </ProtectedRoute>
+  }
+/>
           {/* Notifications */}
           <Route
             path="/notifications"

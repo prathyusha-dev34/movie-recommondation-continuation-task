@@ -1,6 +1,13 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    ForeignKey,
+    Boolean,
+    DateTime
+)
 from sqlalchemy.orm import relationship
-from sqlalchemy import String
+from sqlalchemy.sql import func
 from app.database import Base
 
 
@@ -10,10 +17,21 @@ class Collection(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     description = Column(String(255), nullable=True)
+    is_public = Column(Boolean, nullable=False, default=False)
 
-    user_id = Column(Integer, ForeignKey("users.id"))
+    # Automatically sets the creation timestamp
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False
+    )
 
-    user = relationship("User", back_populates="collections")
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    user = relationship(
+        "User",
+        back_populates="collections"
+    )
 
     movies = relationship(
         "CollectionMovie",
@@ -29,14 +47,13 @@ class CollectionMovie(Base):
 
     collection_id = Column(
         Integer,
-        ForeignKey("collections.id")
+        ForeignKey("collections.id"),
+        nullable=False
     )
 
-    movie_id = Column(String)
-
-    movie_title = Column(String(255))
-
-    poster_path = Column(String(255))
+    movie_id = Column(String, nullable=False)
+    movie_title = Column(String(255), nullable=False)
+    poster_path = Column(String(255), nullable=True)
 
     collection = relationship(
         "Collection",

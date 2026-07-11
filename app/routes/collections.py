@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from app.database import SessionLocal
 from app import base1_schemas
 from app.auth import get_current_user
 from app.models.collection import Collection, CollectionMovie
+from app.models.user import User
 
 router = APIRouter(
     prefix="/collections",
@@ -20,6 +22,10 @@ def get_db():
         db.close()
 
 
+# -------------------------------
+# CREATE COLLECTION
+# -------------------------------
+
 @router.post("/", response_model=base1_schemas.CollectionResponse)
 def create_collection(
     collection: base1_schemas.CollectionCreate,
@@ -29,6 +35,7 @@ def create_collection(
     new_collection = Collection(
         name=collection.name,
         description=collection.description,
+        is_public=collection.is_public,
         user_id=current_user.id,
     )
 
@@ -38,6 +45,10 @@ def create_collection(
 
     return new_collection
 
+
+# -------------------------------
+# MY COLLECTIONS
+# -------------------------------
 
 @router.get("/", response_model=list[base1_schemas.CollectionResponse])
 def get_collections(
@@ -50,6 +61,91 @@ def get_collections(
         .all()
     )
 
+
+# -------------------------------
+# PUBLIC COLLECTIONS
+# IMPORTANT:
+# This route MUST be above /{collection_id}
+# -------------------------------
+
+@router.get("/public")
+def get_public_collections(
+    db: Session = Depends(get_db),
+):
+    collections = (
+        db.query(Collection)
+        .filter(Collection.is_public == True)
+        .all()
+    )
+
+    data = []
+
+    for collection in collections:
+
+        owner = (
+            db.query(User)
+            .filter(User.id == collection.user_id)
+            .first()
+        )
+
+        data.append({
+            "id": collection.id,
+            "name": collection.name,
+            "description": collection.description,
+            "owner_name": owner.username if owner else "Unknown",
+            "movie_count": len(collection.movies),
+            "created_at": collection.created_at,
+        })
+
+    return data
+
+
+# -------------------------------
+# SEARCH PUBLIC COLLECTIONS
+# -------------------------------
+
+@router.get("/search")
+def search_public_collections(
+    query: str,
+    db: Session = Depends(get_db),
+):
+    collections = (
+        db.query(Collection)
+        .filter(
+            Collection.is_public == True,
+            or_(
+                Collection.name.ilike(f"%{query}%"),
+                Collection.description.ilike(f"%{query}%")
+            )
+        )
+        .all()
+    )
+
+    data = []
+
+    for collection in collections:
+
+        owner = (
+            db.query(User)
+            .filter(User.id == collection.user_id)
+            .first()
+        )
+
+        data.append({
+            "id": collection.id,
+            "name": collection.name,
+            "description": collection.description,
+            "owner_name": owner.username if owner else "Unknown",
+            "movie_count": len(collection.movies),
+            "created_at": collection.created_at,
+        })
+
+    return data
+
+
+# -------------------------------
+# SINGLE COLLECTION
+# -------------------------------
 
 @router.get("/{collection_id}", response_model=base1_schemas.CollectionResponse)
 def get_collection(
@@ -67,10 +163,16 @@ def get_collection(
     )
 
     if not collection:
-        raise HTTPException(status_code=404, detail="Collection not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
 
-    return collection
+    return collection 
 
+  # -------------------------------
+# UPDATE COLLECTION
+# -------------------------------
 
 @router.put("/{collection_id}", response_model=base1_schemas.CollectionResponse)
 def update_collection(
@@ -89,16 +191,24 @@ def update_collection(
     )
 
     if not collection:
-        raise HTTPException(status_code=404, detail="Collection not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
 
     collection.name = updated.name
     collection.description = updated.description
+    collection.is_public = updated.is_public
 
     db.commit()
     db.refresh(collection)
 
     return collection
 
+
+# -------------------------------
+# DELETE COLLECTION
+# -------------------------------
 
 @router.delete("/{collection_id}")
 def delete_collection(
@@ -116,13 +226,22 @@ def delete_collection(
     )
 
     if not collection:
-        raise HTTPException(status_code=404, detail="Collection not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
 
     db.delete(collection)
     db.commit()
 
-    return {"message": "Collection deleted successfully"}
+    return {
+        "message": "Collection deleted successfully"
+    }
 
+
+# -------------------------------
+# ADD MOVIE TO COLLECTION
+# -------------------------------
 
 @router.post("/{collection_id}/movies")
 def add_movie(
@@ -141,7 +260,25 @@ def add_movie(
     )
 
     if not collection:
-        raise HTTPException(status_code=404, detail="Collection not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
+
+    existing = (
+        db.query(CollectionMovie)
+        .filter(
+            CollectionMovie.collection_id == collection.id,
+            CollectionMovie.movie_id == movie.movie_id,
+        )
+        .first()
+    )
+
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail="Movie already exists in collection"
+        )
 
     new_movie = CollectionMovie(
         collection_id=collection.id,
@@ -153,8 +290,14 @@ def add_movie(
     db.add(new_movie)
     db.commit()
 
-    return {"message": "Movie added successfully"}
+    return {
+        "message": "Movie added successfully"
+    }
 
+
+# -------------------------------
+# REMOVE MOVIE
+# -------------------------------
 
 @router.delete("/{collection_id}/movies/{movie_id}")
 def remove_movie(
@@ -175,9 +318,14 @@ def remove_movie(
     )
 
     if not movie:
-        raise HTTPException(status_code=404, detail="Movie not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Movie not found"
+        )
 
     db.delete(movie)
     db.commit()
 
-    return {"message": "Movie removed successfully"}
+    return {
+        "message": "Movie removed successfully"
+    }

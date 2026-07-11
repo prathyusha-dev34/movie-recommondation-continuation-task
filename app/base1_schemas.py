@@ -11,7 +11,7 @@ class MovieCreate(BaseModel):
     movie_title: str
     poster_path: Optional[str] = None
 
-    @field_validator('movie_id', mode='before')
+    @field_validator("movie_id", mode="before")
     @classmethod
     def coerce_movie_id(cls, v):
         if v is not None:
@@ -33,6 +33,7 @@ class MovieResponse(MovieCreate):
 class CollectionBase(BaseModel):
     name: str
     description: Optional[str] = None
+    is_public: bool = False
 
 
 class CollectionCreate(CollectionBase):

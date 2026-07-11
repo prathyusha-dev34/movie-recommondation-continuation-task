@@ -1,9 +1,22 @@
 import API from "./api";
 
-
 // Get all collections
 export const getCollections = async () => {
   const response = await API.get("/collections/");
+  return response.data;
+};
+
+// Get public collections
+export const getPublicCollections = async () => {
+  const response = await API.get("/collections/public");
+  return response.data;
+};
+
+// Search public collections
+export const searchCollections = async (query) => {
+  const response = await API.get(
+    `/collections/search?query=${encodeURIComponent(query)}`
+  );
   return response.data;
 };
 
@@ -33,12 +46,20 @@ export const deleteCollection = async (collectionId) => {
 
 // Add movie to collection
 export const addMovieToCollection = async (collectionId, movie) => {
-  const response = await API.post(`/collections/${collectionId}/movies`, movie);
+  const response = await API.post(
+    `/collections/${collectionId}/movies`,
+    movie
+  );
   return response.data;
 };
 
 // Remove movie from collection
-export const removeMovieFromCollection = async (collectionId, movieId) => {
-  const response = await API.delete(`/collections/${collectionId}/movies/${movieId}`);
+export const removeMovieFromCollection = async (
+  collectionId,
+  movieId
+) => {
+  const response = await API.delete(
+    `/collections/${collectionId}/movies/${movieId}`
+  );
   return response.data;
 };

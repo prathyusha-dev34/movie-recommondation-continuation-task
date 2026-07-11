@@ -1,50 +1,79 @@
 /* =========================
-   Page Container
+   COLLECTIONS PAGE
 ========================= */
 
 .collections-page {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 20px;
-  color: white;
-}
-
-.collections-page h2 {
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 30px;
+  padding: 35px;
+  max-width: 1450px;
+  margin: auto;
+  color: #fff;
 }
 
 /* =========================
-   Create / Edit Form
+   Header
+========================= */
+
+.collections-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.collections-header h2 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.public-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 24px;
+
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  text-decoration: none;
+
+  border-radius: 12px;
+  font-weight: 600;
+
+  transition: .3s;
+}
+
+.public-btn:hover {
+  color: #fff;
+  text-decoration: none;
+
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(34,197,94,.35);
+}
+
+/* =========================
+   Form
 ========================= */
 
 .collection-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 40px;
   background: #1e293b;
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  padding: 28px;
+  border-radius: 18px;
+  margin-bottom: 35px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
 }
 
 .collection-form input,
 .collection-form textarea {
   width: 100%;
-  padding: 14px 16px;
-  border: 2px solid #334155;
-  border-radius: 12px;
-  font-size: 15px;
   background: #0f172a;
-  color: #f1f5f9;
-  transition: border-color 0.2s;
-}
-
-.collection-form input::placeholder,
-.collection-form textarea::placeholder {
-  color: #64748b;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 18px;
+  font-size: 15px;
 }
 
 .collection-form input:focus,
@@ -55,120 +84,174 @@
 
 .collection-form textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 110px;
 }
 
 .collection-form button {
-  background: linear-gradient(90deg, #f59e0b, #ea580c);
+  width: 100%;
+  height: 50px;
+
+  background: linear-gradient(135deg,#2563eb,#3b82f6);
+
   color: white;
   border: none;
-  padding: 14px;
   border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
+
+  font-size: 17px;
+  font-weight: bold;
+
   cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
+  transition: .3s;
 }
 
 .collection-form button:hover {
-  opacity: 0.9;
   transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(37,99,235,.35);
 }
 
 /* =========================
-   Collection Grid
+   Grid
 ========================= */
 
-.collection-grid {
+.collections-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(360px,1fr));
+  gap: 28px;
 }
 
 /* =========================
-   Collection Card
+   Card
 ========================= */
 
 .collection-card {
   background: #1e293b;
-  padding: 25px;
   border-radius: 18px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  transition: transform 0.2s;
+  overflow: hidden;
+  transition: .35s;
+  box-shadow: 0 15px 35px rgba(0,0,0,.30);
 }
 
 .collection-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
 }
 
-.collection-card h3 {
-  color: #f8fafc;
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 8px;
+.collection-banner {
+  height: 90px;
+  background: linear-gradient(135deg,#3b82f6,#7c3aed);
 }
 
-.collection-card p {
-  color: #94a3b8;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 6px;
+.collection-body {
+  padding: 22px;
 }
 
-.movie-count {
-  color: #38bdf8;
+.collection-body h3 {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.collection-body p {
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.collection-info {
+  color: #fbbf24;
+  font-size: 16px;
   font-weight: 600;
-  margin-top: 8px;
+  margin-bottom: 20px;
 }
 
 /* =========================
-   Card Buttons — all same size
+   Buttons
 ========================= */
 
-.card-buttons {
+.collection-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
 }
 
-/* Shared base for all three action buttons */
-.view-btn,
-.edit-btn,
-.delete-btn {
+.collection-actions a,
+.collection-actions button {
   flex: 1;
-  padding: 10px 8px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: center;
-  text-decoration: none;
-  display: inline-flex;
+  height: 42px;
+
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  transition: opacity 0.2s, transform 0.15s;
+
+  border: none;
+  border-radius: 10px;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: .3s;
 }
 
-.view-btn:hover,
-.edit-btn:hover,
-.delete-btn:hover {
-  opacity: 0.85;
-  transform: translateY(-2px);
-}
-
-.view-btn {
+.open-btn {
   background: #10b981;
-  color: white;
+  color: #fff;
+  text-decoration: none;
+}
+
+.open-btn:hover {
+  background: #059669;
+  color: #fff;
+  text-decoration: none;
+  transform: translateY(-2px);
 }
 
 .edit-btn {
   background: #3b82f6;
-  color: white;
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
 }
 
 .delete-btn {
   background: #ef4444;
-  color: white;
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   Empty State
+========================= */
+
+.no-collections {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: #94a3b8;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 900px) {
+
+  .collections-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .collections-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .collection-actions {
+    flex-direction: column;
+  }
+
 }

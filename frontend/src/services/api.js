@@ -4,7 +4,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL:
     import.meta.env.VITE_API_BASE_URL ||
-    "https://movie-recommondation-continuation-task.onrender.com/",
+    "http://127.0.0.1:8000",
   headers: {
     "Content-Type": "application/json",
   },
