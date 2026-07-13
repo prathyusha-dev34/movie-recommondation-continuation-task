@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from collections import Counter
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from app.database import get_db
 from app.auth import get_current_user
@@ -11,19 +13,52 @@ from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
 from app.models.review import Review
 from app.models.collection import Collection
-from collections import Counter
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 router = APIRouter(
     prefix="/dashboard",
     tags=["Dashboard"]
 )
 
-
 # =====================================
 # DASHBOARD STATS
 # =====================================
+
+@router.get("")
+def get_dashboard_stats(
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    return {
+        "watched_count": db.query(ViewedMovie)
+        .filter(ViewedMovie.user_id == current_user.id)
+        .count(),
+
+        "favorites_count": db.query(Favorite)
+        .filter(Favorite.user_id == current_user.id)
+        .count(),
+
+        "watchlist_count": db.query(Watchlist)
+        .filter(Watchlist.user_id == current_user.id)
+        .count(),
+
+        "reviews_count": db.query(Review)
+        .filter(Review.user_id == current_user.id)
+        .count(),
+
+        "collections_count": db.query(Collection)
+        .filter(Collection.user_id == current_user.id)
+        .count(),
+
+        "total_searches": db.query(SearchHistory)
+        .filter(SearchHistory.user_id == current_user.id)
+        .count(),
+    }
+
+
+# =====================================
+# MONTHLY STATS (LAST 6 MONTHS)
+# =====================================
+
 @router.get("/monthly")
 def get_monthly_stats(
     db: Session = Depends(get_db),
@@ -35,6 +70,7 @@ def get_monthly_stats(
 
     for i in range(5, -1, -1):
         month_date = today - relativedelta(months=i)
+
         months.append({
             "month": month_date.strftime("%b"),
             "year": month_date.year,
@@ -67,9 +103,11 @@ def get_monthly_stats(
         for m in months
     ]
 
+
 # =====================================
 # TOP 5 GENRES
 # =====================================
+
 @router.get("/genres")
 def get_top_genres(
     db: Session = Depends(get_db),
@@ -100,6 +138,7 @@ def get_top_genres(
 # =====================================
 # RECENT ACTIVITY
 # =====================================
+
 @router.get("/recent")
 def get_recent_activity(
     db: Session = Depends(get_db),
