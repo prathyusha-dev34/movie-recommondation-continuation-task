@@ -22,10 +22,10 @@ const AdminUsers = () => {
     try {
       await API.delete(`/admin/users/${id}`);
       setUsers(users.filter((user) => user.id !== id));
-      alert("User deleted successfully");
+     showToast("User deleted successfully", "success");
     } catch (err) {
       console.error(err);
-      alert("Failed to delete user");
+      showToast("Failed to delete user", "error");
     }
   };
 

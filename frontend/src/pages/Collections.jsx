@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import CollectionCard from "../components/CollectionCard";
+import CreateCollectionModal from "../components/CollectionModal";
 import {
   getCollections,
   createCollection,
@@ -15,6 +17,7 @@ const Collections = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { showToast } = useToast();
 
@@ -52,6 +55,7 @@ const Collections = () => {
       setName("");
       setDescription("");
       setEditingId(null);
+      setIsModalOpen(false);
 
       loadCollections();
     } catch (error) {
@@ -64,19 +68,32 @@ const Collections = () => {
     setEditingId(collection.id);
     setName(collection.name);
     setDescription(collection.description || "");
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this collection?")) return;
-
     try {
       await deleteCollection(id);
       loadCollections();
-      showToast("Collection deleted successfully");
+      showToast("Collection deleted successfully", "success");
     } catch (error) {
       console.error(error);
       showToast("Delete failed", "error");
     }
+  };
+
+  const openCreateModal = () => {
+    setEditingId(null);
+    setName("");
+    setDescription("");
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingId(null);
+    setName("");
+    setDescription("");
   };
 
   return (
@@ -84,30 +101,20 @@ const Collections = () => {
       <div className="collections-header">
         <h2>🎬 My Collections</h2>
 
-        <Link to="/collections/public" className="public-btn">
-          🌍 Public Collections
-        </Link>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            type="button"
+            className="public-btn"
+            onClick={openCreateModal}
+          >
+            ➕ Create Collection
+          </button>
+
+          <Link to="/collections/public" className="public-btn">
+            🌍 Public Collections
+          </Link>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} className="collection-form">
-        <input
-          type="text"
-          placeholder="Collection Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <button type="submit">
-          {editingId ? "✏️ Update Collection" : "➕ Create Collection"}
-        </button>
-      </form>
 
       <div className="collections-grid">
         {collections.length === 0 ? (
@@ -116,49 +123,26 @@ const Collections = () => {
           </div>
         ) : (
           collections.map((collection) => (
-            <div className="collection-card" key={collection.id}>
-              <div className="collection-banner"></div>
-
-              <div className="collection-body">
-                <h3>{collection.name}</h3>
-
-                <p>
-                  {collection.description || "No description available."}
-                </p>
-
-                <div className="collection-info">
-                  🎬 Movies: {collection.movies?.length || 0}
-                </div>
-
-                <div className="collection-actions">
-                  <Link
-                    to={`/collections/${collection.id}`}
-                    className="open-btn"
-                  >
-                    📂 Open
-                  </Link>
-
-                  <button
-                    type="button"
-                    className="edit-btn"
-                    onClick={() => handleEdit(collection)}
-                  >
-                    ✏️ Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => handleDelete(collection.id)}
-                  >
-                    🗑 Delete
-                  </button>
-                </div>
-              </div>
-            </div>
+            <CollectionCard
+              key={collection.id}
+              collection={collection}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))
         )}
       </div>
+
+      <CreateCollectionModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={handleSubmit}
+        name={name}
+        setName={setName}
+        description={description}
+        setDescription={setDescription}
+        editingId={editingId}
+      />
     </div>
   );
 };

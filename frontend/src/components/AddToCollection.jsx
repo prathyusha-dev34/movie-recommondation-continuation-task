@@ -3,10 +3,13 @@ import {
   getCollections,
   addMovieToCollection,
 } from "../services/collectionService";
+import { useToast } from "../context/ToastContext";
 
 const AddToCollection = ({ movie }) => {
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState("");
+
+  const { showToast } = useToast();
 
   useEffect(() => {
     loadCollections();
@@ -22,12 +25,13 @@ const AddToCollection = ({ movie }) => {
       }
     } catch (error) {
       console.error(error);
+      showToast("Failed to load collections.", "error");
     }
   };
 
   const handleAdd = async () => {
     if (!selectedCollection) {
-      alert("Please create a collection first.");
+      showToast("Please create a collection first.", "warning");
       return;
     }
 
@@ -38,10 +42,10 @@ const AddToCollection = ({ movie }) => {
         poster_path: movie.poster_path,
       });
 
-      alert("Movie added successfully!");
+      showToast("Movie added successfully!", "success");
     } catch (error) {
       console.error(error);
-      alert("Unable to add movie.");
+      showToast("Unable to add movie.", "error");
     }
   };
 
@@ -51,11 +55,15 @@ const AddToCollection = ({ movie }) => {
         value={selectedCollection}
         onChange={(e) => setSelectedCollection(e.target.value)}
       >
-        {collections.map((collection) => (
-          <option key={collection.id} value={collection.id}>
-            {collection.name}
-          </option>
-        ))}
+        {collections.length > 0 ? (
+          collections.map((collection) => (
+            <option key={collection.id} value={collection.id}>
+              {collection.name}
+            </option>
+          ))
+        ) : (
+          <option value="">No Collections</option>
+        )}
       </select>
 
       <button

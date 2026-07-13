@@ -4,6 +4,7 @@ import {
   getCollection,
   removeMovieFromCollection,
 } from "../services/collectionService";
+import { useToast } from "../context/ToastContext";
 
 import "./CollectionDetails.css";
 
@@ -13,6 +14,11 @@ const CollectionDetails = () => {
   const { id } = useParams();
 
   const [collection, setCollection] = useState(null);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [movieToRemove, setMovieToRemove] = useState(null);
+
+  const { showToast } = useToast();
 
   useEffect(() => {
     loadCollection();
@@ -24,17 +30,23 @@ const CollectionDetails = () => {
       setCollection(data);
     } catch (error) {
       console.error(error);
+      showToast("Failed to load collection", "error");
     }
   };
 
-  const handleRemove = async (movieId) => {
-    if (!window.confirm("Remove this movie from the collection?")) return;
-
+  const handleRemove = async () => {
     try {
-      await removeMovieFromCollection(id, movieId);
+      await removeMovieFromCollection(id, movieToRemove);
+
       loadCollection();
+
+      showToast("Movie removed from collection", "success");
+
+      setShowConfirm(false);
+      setMovieToRemove(null);
     } catch (error) {
       console.error(error);
+      showToast("Failed to remove movie", "error");
     }
   };
 
@@ -69,7 +81,10 @@ const CollectionDetails = () => {
 
               <button
                 className="remove-btn"
-                onClick={() => handleRemove(movie.movie_id)}
+                onClick={() => {
+                  setMovieToRemove(movie.movie_id);
+                  setShowConfirm(true);
+                }}
               >
                 Remove
               </button>
@@ -77,6 +92,33 @@ const CollectionDetails = () => {
           ))
         )}
       </div>
+
+      {showConfirm && (
+        <div className="modal-overlay">
+          <div className="confirm-modal">
+            <h3>Remove Movie?</h3>
+
+            <p>
+              Are you sure you want to remove this movie from the collection?
+            </p>
+
+            <div className="modal-buttons">
+              <button
+                onClick={() => {
+                  setShowConfirm(false);
+                  setMovieToRemove(null);
+                }}
+              >
+                Cancel
+              </button>
+
+              <button onClick={handleRemove}>
+                Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

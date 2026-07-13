@@ -111,11 +111,13 @@ def search_public_collections(
 ):
     collections = (
         db.query(Collection)
+        .join(User, Collection.user_id == User.id)
         .filter(
             Collection.is_public == True,
             or_(
                 Collection.name.ilike(f"%{query}%"),
-                Collection.description.ilike(f"%{query}%")
+                Collection.description.ilike(f"%{query}%"),
+                User.username.ilike(f"%{query}%")
             )
         )
         .all()
@@ -124,7 +126,6 @@ def search_public_collections(
     data = []
 
     for collection in collections:
-
         owner = (
             db.query(User)
             .filter(User.id == collection.user_id)
@@ -141,7 +142,6 @@ def search_public_collections(
         })
 
     return data
-
 
 # -------------------------------
 # SINGLE COLLECTION

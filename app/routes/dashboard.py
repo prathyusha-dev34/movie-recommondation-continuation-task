@@ -11,6 +11,9 @@ from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
 from app.models.review import Review
 from app.models.collection import Collection
+from collections import Counter
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 router = APIRouter(
     prefix="/dashboard",
@@ -21,57 +24,48 @@ router = APIRouter(
 # =====================================
 # DASHBOARD STATS
 # =====================================
-@router.get("/")
-def get_dashboard(
+@router.get("/monthly")
+def get_monthly_stats(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
+    today = datetime.now()
 
-    watched_count = (
+    months = []
+
+    for i in range(5, -1, -1):
+        month_date = today - relativedelta(months=i)
+        months.append({
+            "month": month_date.strftime("%b"),
+            "year": month_date.year,
+            "month_num": month_date.month,
+            "count": 0
+        })
+
+    watched = (
         db.query(ViewedMovie)
         .filter(ViewedMovie.user_id == current_user.id)
-        .count()
+        .all()
     )
 
-    favorites_count = (
-        db.query(Favorite)
-        .filter(Favorite.user_id == current_user.id)
-        .count()
-    )
+    for movie in watched:
+        if not movie.viewed_at:
+            continue
 
-    watchlist_count = (
-        db.query(Watchlist)
-        .filter(Watchlist.user_id == current_user.id)
-        .count()
-    )
+        for month in months:
+            if (
+                movie.viewed_at.year == month["year"]
+                and movie.viewed_at.month == month["month_num"]
+            ):
+                month["count"] += 1
 
-    reviews_count = (
-        db.query(Review)
-        .filter(Review.user_id == current_user.id)
-        .count()
-    )
-
-    collections_count = (
-        db.query(Collection)
-        .filter(Collection.user_id == current_user.id)
-        .count()
-    )
-
-    total_searches = (
-        db.query(SearchHistory)
-        .filter(SearchHistory.user_id == current_user.id)
-        .count()
-    )
-
-    return {
-        "watched_count": watched_count,
-        "favorites_count": favorites_count,
-        "watchlist_count": watchlist_count,
-        "reviews_count": reviews_count,
-        "collections_count": collections_count,
-        "total_searches": total_searches
-    }
-
+    return [
+        {
+            "month": m["month"],
+            "count": m["count"]
+        }
+        for m in months
+    ]
 
 # =====================================
 # TOP 5 GENRES
@@ -81,70 +75,25 @@ def get_top_genres(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-
-    genres = (
-        db.query(
-            ViewedMovie.genre,
-            func.count(ViewedMovie.id).label("count")
-        )
+    watched_movies = (
+        db.query(ViewedMovie.genre)
         .filter(ViewedMovie.user_id == current_user.id)
-        .group_by(ViewedMovie.genre)
-        .order_by(func.count(ViewedMovie.id).desc())
-        .limit(5)
         .all()
     )
 
-    return [
-        {
-            "genre": item.genre,
-            "count": item.count
-        }
-        for item in genres
-        if item.genre
-    ]
+    genre_counter = Counter()
 
-
-# =====================================
-# MONTHLY WATCHED MOVIES
-# =====================================
-@router.get("/monthly")
-def get_monthly_stats(
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
-):
-
-    monthly = (
-        db.query(
-            func.extract("month", ViewedMovie.viewed_at).label("month"),
-            func.count(ViewedMovie.id).label("count")
-        )
-        .filter(ViewedMovie.user_id == current_user.id)
-        .group_by(func.extract("month", ViewedMovie.viewed_at))
-        .order_by(func.extract("month", ViewedMovie.viewed_at))
-        .all()
-    )
-
-    month_names = {
-        1: "Jan",
-        2: "Feb",
-        3: "Mar",
-        4: "Apr",
-        5: "May",
-        6: "Jun",
-        7: "Jul",
-        8: "Aug",
-        9: "Sep",
-        10: "Oct",
-        11: "Nov",
-        12: "Dec"
-    }
+    for movie in watched_movies:
+        if movie.genre:
+            genres = [g.strip() for g in movie.genre.split(",")]
+            genre_counter.update(genres)
 
     return [
         {
-            "month": month_names.get(int(item.month), ""),
-            "count": item.count
+            "genre": genre,
+            "count": count
         }
-        for item in monthly
+        for genre, count in genre_counter.most_common(5)
     ]
 
 

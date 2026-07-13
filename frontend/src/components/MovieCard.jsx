@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import { useCompare } from "../context/CompareContext";
+import { useToast } from "../context/ToastContext";
 import {
   getCollections,
   addMovieToCollection,
@@ -9,7 +10,14 @@ import {
 function MovieCard({ movie }) {
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState("");
-  const { isMovieSelected, addMovieToCompare, removeMovieFromCompare } = useCompare();
+
+  const {
+    isMovieSelected,
+    addMovieToCompare,
+    removeMovieFromCompare,
+  } = useCompare();
+
+  const { showToast } = useToast();
 
   const movieId = movie.imdbID || movie.movie_id || movie.title;
   const isSelected = isMovieSelected(movieId);
@@ -32,17 +40,19 @@ function MovieCard({ movie }) {
       setCollections(data);
     } catch (error) {
       console.error("Failed to load collections:", error);
+      showToast("Failed to load collections", "error");
     }
   };
 
   const checkStatus = async () => {
     if (!movieId) return;
+
     try {
       const response = await API.get(`/watched/status/${movieId}`);
       setIsWatched(response.data.watched);
       setInWatchlist(response.data.watchlist);
     } catch (error) {
-      console.warn("Failed to fetch watched/watchlist status", error);
+      console.warn(error);
     }
   };
 
@@ -51,17 +61,24 @@ function MovieCard({ movie }) {
     try {
       const favoriteData = {
         movie_id: movieId,
-        movie_title: movie.title,
-        genre: movie.genre,
-        poster: movie.poster,
+        movie_title: movieTitle,
+        genre: movieGenre,
+        poster: moviePoster,
       };
 
-      // ✅ Use shared API instance (no hardcoded URL, token auto-attached)
       const response = await API.post("/favorites/", favoriteData);
-      alert(response.data.message || "Added to Favorites ❤️");
+
+      showToast(
+        response.data.message || "Added to Favorites ❤️",
+        "success"
+      );
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.detail || "Favorite failed ❌");
+
+      showToast(
+        error.response?.data?.detail || "Favorite failed",
+        "error"
+      );
     }
   };
 
@@ -75,107 +92,132 @@ function MovieCard({ movie }) {
         poster: moviePoster,
       };
 
-      // ✅ Use shared API instance
       const response = await API.post("/watchlist/", watchlistData);
+
       setInWatchlist(true);
-      alert(response.data.message || "Added to Watchlist 📺");
+
+      showToast(
+        response.data.message || "Added to Watchlist 📺",
+        "success"
+      );
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.detail || "Watchlist failed ❌");
+
+      showToast(
+        error.response?.data?.detail || "Watchlist failed",
+        "error"
+      );
     }
   };
 
-  // WATCHED HISTORY
+  // WATCHED
   const toggleWatched = async () => {
     try {
       if (isWatched) {
         await API.delete(`/watched/${movieId}`);
+
         setIsWatched(false);
-        // If we are toggling in watchlist view, we might want to refresh.
-        // Let's check status to sync
+
         await checkStatus();
-        alert("Removed from Watched History 👁️");
+
+        showToast("Removed from Watched History", "success");
       } else {
         const watchedData = {
           movie_id: String(movieId),
           movie_title: movieTitle,
           genre: movieGenre,
           poster: moviePoster,
-          imdb_rating: movie.imdb_rating || movie.rating || "N/A"
+          imdb_rating: movie.imdb_rating || movie.rating || "N/A",
         };
+
         await API.post("/watched/", watchedData);
+
         setIsWatched(true);
-        setInWatchlist(false); // automatically removed from watchlist
-        alert("Marked as Watched 👁️");
+        setInWatchlist(false);
+
+        showToast("Marked as Watched", "success");
       }
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.detail || "Action failed ❌");
+
+      showToast(
+        error.response?.data?.detail || "Action failed",
+        "error"
+      );
     }
   };
 
-  // ADD REVIEW
+    // ADD REVIEW
   const addReview = async () => {
     try {
       const reviewData = {
         movie_id: movieId,
-        movie_title: movie.title,
+        movie_title: movieTitle,
         rating: 5,
         review: "Excellent Movie ⭐",
       };
 
-      // ✅ Use shared API instance
       const response = await API.post("/reviews/", reviewData);
-      alert(response.data.message || "Review Added ⭐");
+
+      showToast(
+        response.data.message || "Review Added ⭐",
+        "success"
+      );
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.detail || "Review failed ❌");
+
+      showToast(
+        error.response?.data?.detail || "Review failed",
+        "error"
+      );
     }
   };
 
   // VIEW REVIEWS
   const getReviews = async () => {
     try {
-      // ✅ Use shared API instance
       const response = await API.get(`/reviews/${movieId}`);
 
       if (response.data.reviews.length === 0) {
-        alert("No reviews found");
+        showToast("No reviews found", "info");
         return;
       }
 
-      const reviewsText = response.data.reviews
-        .map((review) => `⭐ ${review.rating}/5\n${review.review}`)
-        .join("\n\n");
+      showToast("Reviews loaded successfully", "success");
 
-      alert(reviewsText);
+      console.log(response.data.reviews);
     } catch (error) {
       console.error(error);
-      alert("Failed to load reviews");
+      showToast("Failed to load reviews", "error");
     }
   };
 
   // ADD TO COLLECTION
   const addToCollection = async () => {
     if (!selectedCollection) {
-      alert("Please select a collection");
+      showToast("Please select a collection", "warning");
       return;
     }
 
     try {
       await addMovieToCollection(selectedCollection, {
         movie_id: String(movieId),
-        movie_title: movie.title,
-        poster_path: movie.poster,
+        movie_title: movieTitle,
+        poster_path: moviePoster,
       });
 
-      alert("Movie added to collection 📁");
+      showToast("Movie added to collection", "success");
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.detail || "Failed to add movie");
+
+      showToast(
+        error.response?.data?.detail || "Failed to add movie",
+        "error"
+      );
     }
   };
 
+  // COMPARE
   const handleCompareToggle = () => {
     if (isSelected) {
       removeMovieFromCompare(movieId);
@@ -198,18 +240,18 @@ function MovieCard({ movie }) {
             top: "10px",
             right: "10px",
             backgroundColor: "#10b981",
-            color: "white",
+            color: "#fff",
             padding: "4px 8px",
             borderRadius: "12px",
             fontSize: "12px",
             fontWeight: "bold",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.3)",
-            zIndex: 2
+            zIndex: 2,
           }}
         >
           ✓ Watched
         </span>
       )}
+
       {inWatchlist && (
         <span
           className="watchlist-badge"
@@ -218,18 +260,18 @@ function MovieCard({ movie }) {
             top: "10px",
             left: "10px",
             backgroundColor: "#3b82f6",
-            color: "white",
+            color: "#fff",
             padding: "4px 8px",
             borderRadius: "12px",
             fontSize: "12px",
             fontWeight: "bold",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.3)",
-            zIndex: 2
+            zIndex: 2,
           }}
         >
           📺 Watchlist
         </span>
       )}
+
       <img
         src={
           moviePoster && moviePoster !== "N/A"
@@ -241,10 +283,12 @@ function MovieCard({ movie }) {
 
       <div className="movie-info">
         <h3>{movieTitle}</h3>
+
         <p>{movieGenre}</p>
+
         <p>{movie.reason}</p>
 
-        <button className="fav-btn" onClick={addToFavorites}>
+                <button className="fav-btn" onClick={addToFavorites}>
           ❤️ Favorite
         </button>
 
@@ -265,13 +309,13 @@ function MovieCard({ movie }) {
             cursor: "pointer",
             marginTop: "8px",
             fontWeight: "600",
-            transition: "0.3s"
+            transition: "0.3s",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.opacity = "0.85";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.opacity = "1.0";
+            e.currentTarget.style.opacity = "1";
           }}
         >
           {isWatched ? "❌ Remove Watched" : "👁️ Mark Watched"}
@@ -290,20 +334,29 @@ function MovieCard({ movie }) {
           onChange={(e) => setSelectedCollection(e.target.value)}
         >
           <option value="">Select Collection</option>
+
           {collections.map((collection) => (
-            <option key={collection.id} value={collection.id}>
+            <option
+              key={collection.id}
+              value={collection.id}
+            >
               {collection.name}
             </option>
           ))}
         </select>
 
-        <button className="collection-btn" onClick={addToCollection}>
+        <button
+          className="collection-btn"
+          onClick={addToCollection}
+        >
           📁 Add to Collection
         </button>
 
         <div className="compare-checkbox-container">
           <button
-            className={`compare-toggle-btn ${isSelected ? "selected" : ""}`}
+            className={`compare-toggle-btn ${
+              isSelected ? "selected" : ""
+            }`}
             onClick={handleCompareToggle}
           >
             {isSelected ? "✓ Comparing" : "＋ Compare"}

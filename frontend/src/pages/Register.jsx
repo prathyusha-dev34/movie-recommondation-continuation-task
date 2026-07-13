@@ -28,7 +28,7 @@ function Register() {
         },
       });
 
-      alert("Registration Successful! Please log in.");
+      showToast("Registration Successful! Please log in.", "success");
       window.location.href = "/login";
     } catch (err) {
       let message = "Registration failed. Please try again.";

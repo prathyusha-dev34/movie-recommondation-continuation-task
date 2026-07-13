@@ -31,7 +31,7 @@ export const CompareProvider = ({ children }) => {
 
     // Limit to 3 movies
     if (selectedMovies.length >= 3) {
-      alert("You can compare up to 3 movies at a time.");
+      showToast("You can compare up to 3 movies at a time.", "warning");
       return;
     }
 

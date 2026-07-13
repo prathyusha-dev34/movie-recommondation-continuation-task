@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import "./Watchlist.css";
-
+import { useToast } from "../context/ToastContext";
 function Watchlist() {
   const [activeTab, setActiveTab] = useState("watchlist");
   const [watchlistMovies, setWatchlistMovies] = useState([]);
@@ -55,38 +55,52 @@ function Watchlist() {
       setWatchlistMovies(watchlistMovies.filter((m) => m.id !== id));
     } catch (err) {
       console.error("Failed to remove watchlist movie:", err);
-      alert("Failed to remove movie");
+      showToast("Failed to remove movie", "error");
     }
   };
+const markAsWatched = async (movie) => {
+  try {
+    const watchedData = {
+      movie_id: String(movie.movie_id),
+      movie_title: movie.movie_title,
+      genre: movie.genre || "",
+      poster: movie.poster || "",
+      imdb_rating: movie.imdb_rating || "N/A",
+    };
 
-  const markAsWatched = async (movie) => {
-    try {
-      const watchedData = {
-        movie_id: String(movie.movie_id),
-        movie_title: movie.movie_title,
-        genre: movie.genre || "",
-        poster: movie.poster || "",
-        imdb_rating: "N/A", // Default rating if not available
-      };
-      await API.post("/watched/", watchedData);
-      setWatchlistMovies(watchlistMovies.filter((m) => m.id !== movie.id));
-      alert(`"${movie.movie_title}" marked as watched!`);
-    } catch (err) {
-      console.error("Mark watched failed:", err);
-      alert("Failed to mark movie as watched");
-    }
-  };
+    // Add movie to watched
+    await API.post("/watched/", watchedData);
 
-  const removeFromWatched = async (movieId) => {
-    try {
-      await API.delete(`/watched/${movieId}`);
-      setWatchedMovies(watchedMovies.filter((m) => m.movie_id !== movieId));
-    } catch (err) {
-      console.error("Failed to remove watched movie:", err);
-      alert("Failed to remove movie");
-    }
-  };
+    // Remove from watchlist in backend
+    await API.delete(`/watchlist/${movie.id}`);
 
+    // Refresh both lists
+    await fetchWatchlist();
+    await fetchWatched();
+
+    showToast(
+      `"${movie.movie_title}" marked as watched! 👁️`,
+      "success"
+    );
+  } catch (err) {
+    console.error("Mark watched failed:", err);
+    showToast("Failed to mark movie as watched", "error");
+  }
+};
+const removeFromWatched = async (movieId) => {
+  try {
+    await API.delete(`/watched/${movieId}`);
+
+    setWatchedMovies((prev) =>
+      prev.filter((m) => m.movie_id !== movieId)
+    );
+
+    showToast("Movie removed from watched history", "success");
+  } catch (err) {
+    console.error("Failed to remove watched movie:", err);
+    showToast("Failed to remove movie", "error");
+  }
+};
   const moveToWatchlist = async (movie) => {
     try {
       const watchlistData = {
@@ -98,10 +112,10 @@ function Watchlist() {
       await API.post("/watchlist/", watchlistData);
       await API.delete(`/watched/${movie.movie_id}`);
       setWatchedMovies(watchedMovies.filter((m) => m.movie_id !== movie.movie_id));
-      alert(`"${movie.movie_title}" moved back to Watchlist!`);
+      showToast(`"${movie.movie_title}" moved back to Watchlist! 📺`, "success");
     } catch (err) {
       console.error("Failed to move back to watchlist:", err);
-      alert("Failed to move movie");
+      showToast("Failed to move movie", "error");
     }
   };
 

@@ -1,22 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useCompare } from "../context/CompareContext";
+import { useToast } from "../context/ToastContext";
 import "../pages/Compare.css";
 
 function CompareBar() {
   const { selectedMovies, removeMovieFromCompare, clearCompare } = useCompare();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   if (selectedMovies.length === 0) return null;
 
   const handleCompareClick = () => {
     if (selectedMovies.length < 2) {
-      alert("Please select at least 2 movies to compare.");
+      showToast("Please select at least 2 movies to compare.", "warning");
       return;
     }
+
     navigate("/compare");
   };
-
   return (
     <div className="compare-bar">
       <div className="compare-bar-content">
@@ -32,7 +34,11 @@ function CompareBar() {
                 alt={movie.title}
                 className="compare-item-thumb"
               />
-              <span className="compare-item-title">{movie.title}</span>
+
+              <span className="compare-item-title">
+                {movie.title}
+              </span>
+
               <button
                 className="compare-item-remove"
                 onClick={() => removeMovieFromCompare(movie.id)}
@@ -45,9 +51,13 @@ function CompareBar() {
         </div>
 
         <div className="compare-actions">
-          <button className="compare-clear-btn" onClick={clearCompare}>
+          <button
+            className="compare-clear-btn"
+            onClick={clearCompare}
+          >
             Clear All
           </button>
+
           <button
             className={`compare-submit-btn ${
               selectedMovies.length < 2 ? "disabled" : ""
